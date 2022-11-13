@@ -25,7 +25,7 @@ pipeline{
                 }
             }
         }
-        tage("deploy") {
+        stage("deploy") {
             steps{
                 script{
                     echo "################ Deploying the application #################"
