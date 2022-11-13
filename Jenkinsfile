@@ -13,19 +13,18 @@ pipeline{
             }
         }
         stage("build image") {
-            steps{
-                script{
+            steps {
+                script  {
                     echo "################ Building docker image #################"
-                    withCredentials([
-                        usernamePassword(credentialsID: 'Docker-hub-repo', passwordVariable: 'PASS',usernameVariable: 'USER')]) {
+                    withCredentials([usernamePassword(credentialsId: 'Docker-hub-repo', passwordVariable: 'PASS',usernameVariable: 'USER')]) {
                             sh 'docker build -t ahmedsamir98/my-repo:jma-2.0 .'
                             sh "echo $PASS | docker login -u $USER --password-stdin"
                             sh 'docker push ahmedsamir98/my-repo:jma-2.0'
                         }
                 }
             }
-        }
-        stage("deploy") {
+        } 
+        tage("deploy") {
             steps{
                 script{
                     echo "################ Deploying the application #################"
