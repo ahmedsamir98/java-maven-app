@@ -19,7 +19,7 @@ pipeline{
                     withCredentials([usernamePassword(credentialsId: 'Docker-hub-repo', passwordVariable: 'PASS',usernameVariable: 'USER')]) 
                         {
                             sh 'docker build -t ahmedsamir98/my-repo:jma-2.0 .'
-                            sh "docker login -u 'aahmedsamir98@gmail.com' -p 'Aa93_0000' "
+                            sh "echo $PASS | docker login -u $USER --password-stdin"
                             sh 'docker push ahmedsamir98/my-repo:jma-2.0'
                         }
                 }
