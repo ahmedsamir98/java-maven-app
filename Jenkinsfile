@@ -1,36 +1,36 @@
 pipeline{
     agent any
-    parameters {
-        choice( name: 'VERSION' , choices: ['1.1.0','1.2.0','1.3.0'], description: '' )
-        booleanParam( name:'executeTest', defaultValue: true, description: '')
+    tools{
+        maven "Maven-3.6"
     }
-
-    stages{
-        stage ("build") {
+    stages{ 
+        stage("build jar") {
             steps{
-                echo '##################building the application..#########################'
-            }
-        }
-        stage ("test") {
-            when {
-                expression {
-                    params.executeTest
+                script{
+                    echo "################ Building the application #################"
+                    sh 'mvn package'
                 }
             }
+        }
+        stage("build image") {
             steps{
-                echo '##################testing the application..#########################'
+                script{
+                    echo "################ Building docker image #################"
+                    withCredentials([
+                        usernamePassword(credentialsID: 'Docker-hub-repo', passwordVariable: 'PASS',usernameVariable: 'USER')]) {
+                            sh 'docker build -t ahmedsamir98/my-repo:jma-2.0 .'
+                            sh "echo $PASS | docker login -u $USER --password-stdin"
+                            sh 'docker push ahmedsamir98/my-repo:jma-2.0'
+                        }
+                }
             }
         }
-        stage ("deploy") {
+        tage("deploy") {
             steps{
-                echo 'deploying the application...'
-                echo "deploying version ${params.VERSION}"
+                script{
+                    echo "################ Deploying the application #################"
+                }
             }
-        }
-    }
-    post {
-        always {
-            echo "hello ###########################################"
         }
     }
 }
